@@ -1,0 +1,30 @@
+.nav-bar {
+  display: flex;
+  height: 68px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  box-shadow: 0 2px 15px 5px #eee;
+}
+
+.nav-container-menu {
+  display: flex;
+}
+
+.container-nav-link {
+  margin-right: 24px;
+}
+
+.nav-container-user {
+  display: flex;
+}
+
+.avatar {
+  height: 50px;
+  width: 50px;
+  margin-right: 12px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 9999px;
+}

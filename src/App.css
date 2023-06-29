@@ -1,0 +1,15 @@
+.active {
+  color: red;
+}
+
+.pending {
+  color: green;
+}
+
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 500px;
+}

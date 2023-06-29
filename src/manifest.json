@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "VMO Daily Report",
+  "description": "Render daily report quickly and cool",
+  "version": "1.0.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "icons": {
+    "16": "logo-extension.png",
+    "48": "logo-extension.png",
+    "128": "logo-extension.png"
+  },
+  "host_permissions": [
+    "*://*.google.com/"
+  ],
+  "permissions": [
+    "cookies",
+    "identity"
+  ],
+  "oauth2": {
+    "client_id": "66786512151-iob6mri3jh8dg37p0rmd3l04kt5b5jj1.apps.googleusercontent.com",
+    "scopes": []
+  }
+}
