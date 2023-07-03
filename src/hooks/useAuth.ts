@@ -1,7 +1,6 @@
 import { setCredentials, setUser } from '@redux/slices/auth/authSlice'
 import { useAppDispatch } from '@redux/store'
 
-
 const fakeUser = {
   name: 'Dang Anh Tuan',
   email: 'tuanda2@vmogroup.com',
@@ -39,19 +38,18 @@ export const useAuth = function () {
     }
   }
 
-  function login() {
-    // // TODO : call API get token
-    // // TODO : call API get user
-    // localStorage.setItem('access_token', fakeToken)
-    // dispatch(
-    //   setCredentials({
-    //     token: fakeToken,
-    //     user: fakeUser
-    //   })
-    // )
-    chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
-      console.log(token);
-    });
+  async function login() {
+    try {
+      const authToken = await new Promise((resolve) => {
+        chrome.identity.getAuthToken({ interactive: true }, resolve)
+      })
+
+      console.log(authToken)
+      //  TODO : call API login
+      // TODO : call API get user
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   function logout() {

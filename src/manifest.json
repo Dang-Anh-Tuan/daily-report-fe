@@ -11,15 +11,14 @@
     "48": "logo-extension.png",
     "128": "logo-extension.png"
   },
-  "host_permissions": [
-    "*://*.google.com/"
-  ],
-  "permissions": [
-    "cookies",
-    "identity"
-  ],
   "oauth2": {
-    "client_id": "66786512151-iob6mri3jh8dg37p0rmd3l04kt5b5jj1.apps.googleusercontent.com",
-    "scopes": []
-  }
+    "client_id": "66786512151-mvoq4uc5vu3js1c07trjr70g9v7ehqod.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+    ]
+  },
+  "permissions": [
+    "scripting",
+    "identity"
+  ]
 }
