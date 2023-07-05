@@ -1,17 +1,23 @@
-import { baseQueryWithReauth } from '@api/apiSlice'
-import { createApi } from '@reduxjs/toolkit/dist/query'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { FormLogin, ResponseLogin } from '@type/auth'
 
-export const authApiSlice = createApi({
-  reducerPath: 'authApiReducer',
-  baseQuery: baseQueryWithReauth,
+const baseUrl =
+  import.meta.env.VITE_ENV !== 'production'
+    ? import.meta.env.VITE_BASE_URL_PRODUCT
+    : import.meta.env.VITE_BASE_URL_DEVELOP
+
+export const authApi = createApi({
+  reducerPath: 'authApi',
+  baseQuery: fetchBaseQuery({ baseUrl: `${baseUrl}auth/` }),
   endpoints: (builder) => ({
-    addPost: builder.mutation<ResponseLogin, FormLogin>({
+    login: builder.mutation<{ data: ResponseLogin }, FormLogin>({
       query: (body) => ({
-        url: `/login`,
+        url: `login-google`,
         method: 'POST',
         body
       })
     })
   })
 })
+
+export const { useLoginMutation } = authApi

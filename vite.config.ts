@@ -28,7 +28,8 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@middleware': path.resolve(__dirname, './src/middleware'),
       '@type': path.resolve(__dirname, './src/type'),
-      '@icons': path.resolve(__dirname, './src/icons')
+      '@icons': path.resolve(__dirname, './src/icons'),
+      '@utils': path.resolve(__dirname, './src/utils')
     }
   }
 })

@@ -12,7 +12,6 @@ const baseQuery = fetchBaseQuery({
     import.meta.env.VITE_ENV !== 'production'
       ? import.meta.env.VITE_BASE_URL_PRODUCT
       : import.meta.env.VITE_BASE_URL_DEVELOP,
-  credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token
     if (token) {

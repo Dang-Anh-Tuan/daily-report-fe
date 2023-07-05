@@ -11,7 +11,7 @@ const AuthenMiddleware: FC<AuthenMiddlewareProps> = ({
   needAuth,
   token
 }) => {
-  const isLoggedIn = !!token || localStorage.getItem('access_token')
+  const isLoggedIn = !!token
 
   if (isLoggedIn) {
     if (!needAuth) {

@@ -1,20 +1,23 @@
+import { useLoginMutation } from '@redux/slices/auth/authApiSlice'
 import { setCredentials, setUser } from '@redux/slices/auth/authSlice'
+import {
+  useLazyGetUserQuery,
+  useLazyLogoutQuery
+} from '@redux/slices/auth/userApiSlice'
 import { useAppDispatch } from '@redux/store'
-
-const fakeUser = {
-  name: 'Dang Anh Tuan',
-  email: 'tuanda2@vmogroup.com',
-  avatar: 'abc',
-  role: 'user'
-}
+import { IError } from '@type/common'
+import { etsShowNotify } from '@utils/extension'
 
 export const useAuth = function () {
   const dispatch = useAppDispatch()
+  const [loginApi] = useLoginMutation()
+  const [triggerGetUser] = useLazyGetUserQuery()
+  const [triggerLogout] = useLazyLogoutQuery()
   const token: string | undefined = localStorage.getItem(
     'access_token'
   ) as string
 
-  function cookieRemoveAuthInfo() {
+  function localRemoveAuthInfo() {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
     dispatch(
@@ -26,35 +29,80 @@ export const useAuth = function () {
   }
 
   // TODO : Function getUser
-  function getUser(token: string) {
+  async function getUser() {
     try {
-      console.log('call use with token : ' + token)
-
-      dispatch(setUser(fakeUser))
-      return fakeUser
+      const userFetching = await triggerGetUser().unwrap()
+      dispatch(setUser(userFetching))
+      return userFetching
     } catch (error: any) {
-      cookieRemoveAuthInfo()
+      localRemoveAuthInfo()
       // TODO : show toast message
     }
   }
 
   async function login() {
     try {
-      const authToken = await new Promise((resolve) => {
-        chrome.identity.getAuthToken({ interactive: true }, resolve)
+      // *** Try to login in local web React *** :
+      // ***Comment code authen by chrome below
+      // ***Login in by extension and copy token and replace in body call API
+      // ***Get token authen google by chrome
+      // *****************************************
+      const authToken = await new Promise<string>((resolve, reject) => {
+        chrome.identity.getAuthToken({ interactive: true }, (token) => {
+          if (token !== undefined) {
+            resolve(token)
+          } else {
+            reject(new Error('Unable to obtain auth token.'))
+          }
+        })
+      })
+
+      // ***** replace authToken by token authen by extension to test local
+      const loginResp = await loginApi({
+        token: authToken
       })
 
       console.log(authToken)
-      //  TODO : call API login
-      // TODO : call API get user
+
+      // ***Example : fake token
+      // *****************************************
+      // const loginResp = await loginApi({
+      //   token:
+      //     'ya29.a0AbVbY6NJQGaLYjgmgGYDHYxv498H8Mc8_1VwbkPmkV4EB7-eVfMdsDrJoo01PIQ-DI4MQw5RdOYjsUwTqy2ef3wxYZb2_Pw_7U1P9WNaC0YlEjUZ7A38flLjUBwiVItioeO-_X7hNOAIpRl3jNCUMN8yS7A2rQaCgYKAY4SARESFQFWKvPl7LftXPKbDS-cKa6mhcbiXg0165'
+      // })
+
+      if ('data' in loginResp && loginResp.data) {
+        const { accessToken, refreshToken } = loginResp.data.data
+        localStorage.setItem('access_token', accessToken)
+        localStorage.setItem('refresh_token', refreshToken)
+        dispatch(
+          setCredentials({
+            token: accessToken,
+            user: null
+          })
+        )
+        etsShowNotify({
+          title: 'login sucess',
+          message: 'kha lam con zai'
+        })
+        getUser()
+      } else if ('error' in loginResp && loginResp.error) {
+        logout()
+        console.log((loginResp.error as { data: IError }).data.message)
+        // TODO : show message login fail
+      } else {
+        // TODO : show message login fail
+      }
     } catch (error) {
+      // TODO : show message login fail
       console.error(error)
     }
   }
 
-  function logout() {
-    cookieRemoveAuthInfo()
-    // TODO : Show message logout
+  async function logout() {
+    // TODO: call API to remove refresh token
+    await triggerLogout().unwrap()
+    localRemoveAuthInfo()
   }
 
   return { token, login, logout, getUser }

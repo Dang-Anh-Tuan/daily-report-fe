@@ -19,6 +19,13 @@ const setUserAction: CaseReducer<
   state.user = action.payload
 }
 
+const setTokenAction: CaseReducer<
+  AuthSliceState,
+  PayloadAction<string | null | undefined>
+> = (state, action) => {
+  state.token = action.payload
+}
+
 const setCredentialsAction: CaseReducer<
   AuthSliceState,
   PayloadAction<AuthSliceState>
@@ -38,6 +45,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: setUserAction,
+    setToken: setTokenAction,
     setCredentials: setCredentialsAction,
     logout: logoutAction
   }
@@ -45,7 +53,7 @@ export const authSlice = createSlice({
 
 const { actions, reducer } = authSlice
 
-export const { setUser, setCredentials, logout } = actions
+export const { setUser, setCredentials, logout, setToken } = actions
 
 export default reducer
 
