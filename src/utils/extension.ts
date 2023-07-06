@@ -1,3 +1,18 @@
+function randomIdNotify() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomString = '';
+
+  while (randomString.length < length) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    const randomCharacter = characters.charAt(randomIndex);
+    const timestamp = Date.now().toString();
+
+    randomString += randomCharacter + timestamp;
+  }
+
+  return randomString.slice(0, length);
+}
+
 export const etsShowNotify = (data: {
   title: string
   message: string
@@ -5,15 +20,17 @@ export const etsShowNotify = (data: {
   iconUrl?: string
   silent?: boolean
 }) => {
-  if ('Notification' in window) {
-    if (Notification.permission === 'granted') {
-      new Notification(data.title, { body: data.message })
-    } else if (Notification.permission !== 'denied') {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          new Notification(data.title, { body: data.message })
-        }
-      })
-    }
+  if (chrome && chrome.notifications) {
+    chrome.notifications.create(
+      randomIdNotify(),
+      {
+        title: data.title,
+        message: data.title,
+        iconUrl: 'logo-extension.png',
+        type: 'basic',
+        priority: 1
+      },
+      () => {}
+    )
   }
 }

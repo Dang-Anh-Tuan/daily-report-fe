@@ -6,6 +6,8 @@ import {
   FetchBaseQueryError,
   fetchBaseQuery
 } from '@reduxjs/toolkit/query/react'
+import { ResponseLogin } from '@type/auth'
+import { saveLocalToken } from '@utils/auth'
 
 const baseQuery = fetchBaseQuery({
   baseUrl:
@@ -28,15 +30,28 @@ const baseQueryWithReauth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions)
 
-  if (result.error?.status === 403) {
+  if (result.error?.status === 401) {
     //  Sending refresh token
-    const refreshResult = await baseQuery('/refreshToken', api, extraOptions)
+    const refreshToken = localStorage.getItem('refresh_token')
+    const refreshResult = await baseQuery(
+      {
+        url: 'auth/refresh',
+        method: 'POST',
+        body: JSON.stringify({ refreshToken: refreshToken })
+      },
+      api,
+      extraOptions
+    )
     if (refreshResult.data) {
+      const data = refreshResult.data as ResponseLogin
+
+      saveLocalToken(data.accessToken, data.refreshToken)
+
       const user = (api.getState() as RootState).auth.user
       // TODO : May be should call info user again
       const credentials = {
         user,
-        token: (refreshResult.data as { accessToken: string }).accessToken as
+        token: (data as { accessToken: string }).accessToken as
           | string
           | null
           | undefined

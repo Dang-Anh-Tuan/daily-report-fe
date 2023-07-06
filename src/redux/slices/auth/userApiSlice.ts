@@ -1,10 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { baseQuery } from '@api/apiSlice'
+import { baseQueryWithReauth } from '@api/apiSlice'
 import { ResponseGetUser } from '~/type/auth'
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: baseQuery,
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getUser: builder.query<ResponseGetUser, void>({
       query: () => '/auth/user'

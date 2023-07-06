@@ -1,9 +1,9 @@
-import { Suspense } from 'react'
 import Middleware from '@middleware/index'
 import HomePage from '@pages/home'
-import './App.css'
-import { useAppDispatch, useAppSelector } from '@redux/store'
 import { selectToken, setToken } from '@redux/slices/auth/authSlice'
+import { useAppDispatch, useAppSelector } from '@redux/store'
+import { Suspense } from 'react'
+import './App.css'
 
 function App() {
   const token = useAppSelector(selectToken)

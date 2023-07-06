@@ -7,6 +7,7 @@ import {
 import { useAppDispatch } from '@redux/store'
 import { IError } from '@type/common'
 import { etsShowNotify } from '@utils/extension'
+import { removeLocalToken } from '@utils/auth'
 
 export const useAuth = function () {
   const dispatch = useAppDispatch()
@@ -18,8 +19,7 @@ export const useAuth = function () {
   ) as string
 
   function localRemoveAuthInfo() {
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
+    removeLocalToken()
     dispatch(
       setCredentials({
         token: null,
@@ -68,7 +68,7 @@ export const useAuth = function () {
       // *****************************************
       // const loginResp = await loginApi({
       //   token:
-      //     'ya29.a0AbVbY6NJQGaLYjgmgGYDHYxv498H8Mc8_1VwbkPmkV4EB7-eVfMdsDrJoo01PIQ-DI4MQw5RdOYjsUwTqy2ef3wxYZb2_Pw_7U1P9WNaC0YlEjUZ7A38flLjUBwiVItioeO-_X7hNOAIpRl3jNCUMN8yS7A2rQaCgYKAY4SARESFQFWKvPl7LftXPKbDS-cKa6mhcbiXg0165'
+      //     'ya29.a0AbVbY6P_1XbZjVCQ1Dl3cofshw6ak7E9pfnpa3nLfl7_9PqEgZIXMHdJf4G_11LSW8p5XJ70f8BYAjWE4ZNOzzJhQpqdFCzLrfcTc59Jp5UNItXIVGJjNkEk2eUzRJcPdAPr_XHfCrQUI3-0QdPoUfAgg3SQsAaCgYKATwSARESFQFWKvPl4yWeqb4eARAd2tm_KN9I5w0165'
       // })
 
       if ('data' in loginResp && loginResp.data) {
@@ -83,7 +83,7 @@ export const useAuth = function () {
         )
         etsShowNotify({
           title: 'login sucess',
-          message: 'kha lam con zai'
+          message: 'da vao he thong'
         })
         getUser()
       } else if ('error' in loginResp && loginResp.error) {

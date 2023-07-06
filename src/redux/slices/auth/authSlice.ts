@@ -1,5 +1,6 @@
 import { CaseReducer, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { User } from '@type/user'
+import { removeLocalToken } from '@utils/auth'
 import { RootState } from '../../store'
 
 export interface AuthSliceState {
@@ -38,6 +39,7 @@ const setCredentialsAction: CaseReducer<
 const logoutAction: CaseReducer<AuthSliceState> = (state) => {
   state.user = null
   state.token = null
+  removeLocalToken()
 }
 
 export const authSlice = createSlice({
@@ -59,4 +61,3 @@ export default reducer
 
 export const selectToken = (state: RootState) => state.auth.token
 export const selectUser = (state: RootState) => state.auth.user
-
