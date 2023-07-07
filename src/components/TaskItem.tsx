@@ -2,6 +2,7 @@ import { FC, useState } from 'react'
 import InputText from '@components/InputText'
 import BxIconTimes from '@icons/BxIconTimes'
 import { TaskDailyForm } from '@type/form-daily'
+import { notEmpty } from '@utils/validation'
 
 interface TaskItemProps {
   task: TaskDailyForm
@@ -12,6 +13,7 @@ interface TaskItemProps {
 
 const TaskItem: FC<TaskItemProps> = ({ task, keyGroup }) => {
   const [taskData, setTaskData] = useState<TaskDailyForm>(task)
+  const rulesValidate = [notEmpty]
 
   function handleInputTask(value: string, name: string) {
     setTaskData((pre) => ({ ...pre, [name]: value }))
@@ -21,6 +23,7 @@ const TaskItem: FC<TaskItemProps> = ({ task, keyGroup }) => {
     <div className='flex items-center w-full gap-2'>
       <div className={keyGroup === 'actual' ? 'w-9/12' : 'w-11/12'}>
         <InputText
+          rules={rulesValidate}
           value={taskData.content}
           placeholder='Enter header of daily report...'
           name='content'
