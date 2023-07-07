@@ -47,29 +47,29 @@ export const useAuth = function () {
       // ***Login in by extension and copy token and replace in body call API
       // ***Get token authen google by chrome
       // *****************************************
-      const authToken = await new Promise<string>((resolve, reject) => {
-        chrome.identity.getAuthToken({ interactive: true }, (token) => {
-          if (token !== undefined) {
-            resolve(token)
-          } else {
-            reject(new Error('Unable to obtain auth token.'))
-          }
-        })
-      })
+      // const authToken = await new Promise<string>((resolve, reject) => {
+      //   chrome.identity.getAuthToken({ interactive: true }, (token) => {
+      //     if (token !== undefined) {
+      //       resolve(token)
+      //     } else {
+      //       reject(new Error('Unable to obtain auth token.'))
+      //     }
+      //   })
+      // })
 
       // ***** replace authToken by token authen by extension to test local
-      const loginResp = await loginApi({
-        token: authToken
-      })
+      // const loginResp = await loginApi({
+      //   token: authToken
+      // })
 
-      console.log(authToken)
+      // console.log(authToken)
 
       // ***Example : fake token
       // *****************************************
-      // const loginResp = await loginApi({
-      //   token:
-      //     'ya29.a0AbVbY6P_1XbZjVCQ1Dl3cofshw6ak7E9pfnpa3nLfl7_9PqEgZIXMHdJf4G_11LSW8p5XJ70f8BYAjWE4ZNOzzJhQpqdFCzLrfcTc59Jp5UNItXIVGJjNkEk2eUzRJcPdAPr_XHfCrQUI3-0QdPoUfAgg3SQsAaCgYKATwSARESFQFWKvPl4yWeqb4eARAd2tm_KN9I5w0165'
-      // })
+      const loginResp = await loginApi({
+        token:
+          'ya29.a0AbVbY6PMorW9qy553gP0eTaKwVv3PMhh_yQnl-mdRd7vHL5MvyLXGJeUBEq062YO5qRQUuRAdm1v0PVnHMpAYjT23oOjXrg0ja-eli8CbQsKpc1BEf-j1mz80eMOV1b0_72v6hlBZmKOVfnz2K-aoD7xXIFMRAaCgYKAe8SARESFQFWKvPl7W3STpX5Al5SVG9Rowd9PQ0165'
+      })
 
       if ('data' in loginResp && loginResp.data) {
         const { accessToken, refreshToken } = loginResp.data.data

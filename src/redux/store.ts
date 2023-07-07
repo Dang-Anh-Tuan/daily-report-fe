@@ -1,16 +1,20 @@
 import authReducer from '@redux/slices/auth/authSlice'
 import dailyTaskReducer from '@redux/slices/daily-task/dailyTaskSlice'
+import systemTaskReducer from '@redux/slices/system/systemSlice'
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { authApi } from './slices/auth/authApiSlice'
 import { userApi } from './slices/auth/userApiSlice'
+import { dailyReportApi } from './slices/daily-task/dailyTaskApiSlice'
 
 const reducer = {
   auth: authReducer,
   dailyTask: dailyTaskReducer,
+  system: systemTaskReducer,
   [authApi.reducerPath]: authApi.reducer,
-  [userApi.reducerPath]: userApi.reducer
+  [userApi.reducerPath]: userApi.reducer,
+  [dailyReportApi.reducerPath]: dailyReportApi.reducer
 }
 
 const store = configureStore({
@@ -21,6 +25,7 @@ const store = configureStore({
     })
       .concat(authApi.middleware)
       .concat(userApi.middleware)
+      .concat(dailyReportApi.middleware)
 })
 
 setupListeners(store.dispatch)

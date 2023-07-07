@@ -1,18 +1,59 @@
 import GroupTask from '@components/GroupTask'
 import { GROUP_TASK_NAME_HEADER } from '@constants/dataForm'
 import BxIconPointing from '@icons/BxIconPointing'
-import { selectDailyTaskDataForm } from '@redux/slices/daily-task/dailyTaskSlice'
-import { useAppSelector } from '@redux/store'
-import { GroupTasks } from '@type/form-daily'
-import { FC, useState } from 'react'
+import {
+  useGetNearestReportQuery,
+  useUpdateReportMutation
+} from '@redux/slices/daily-task/dailyTaskApiSlice'
+import {
+  selectDailyTaskDataForm,
+  setDailyReport,
+  setHeadingStore
+} from '@redux/slices/daily-task/dailyTaskSlice'
+import { useAppDispatch, useAppSelector } from '@redux/store'
+import { DailyFormData, GroupTasks } from '@type/form-daily'
+import { FC, useEffect, useState } from 'react'
+import { setLoading } from '@redux/slices/system/systemSlice'
 import InputText from './InputText'
+import { selectUser } from '@redux/slices/auth/authSlice'
 
 const DailyForm: FC = () => {
-  const [headerContent, setheaderContent] = useState<string>('')
+  const currentUser = useAppSelector(selectUser)
   const dataForm = useAppSelector(selectDailyTaskDataForm)
+  const dispatch = useAppDispatch()
+  const [heading, setHeading] = useState<string>('')
+  const [updateReportApi] = useUpdateReportMutation()
+
+  const { data: currentReport, isLoading } = currentUser?.id
+    ? useGetNearestReportQuery(currentUser.id)
+    : { data: null, isLoading: false }
+
+  useEffect(() => {
+    dispatch(setLoading(isLoading))
+    dispatch(setDailyReport(currentReport as DailyFormData))
+  }, [currentReport, isLoading])
+
+  useEffect(() => {
+    setHeading(dataForm?.heading || '')
+  }, [dataForm])
+
+  function handleBlurHeading(e: React.FormEvent<HTMLInputElement>) {
+    const newValue = e.currentTarget.value
+    dispatch(setHeadingStore(newValue as string))
+    if (dataForm.id) {
+      updateReportApi({
+        id: dataForm.id,
+        data: {
+          data: {
+            heading: newValue
+          }
+        }
+      })
+    }
+  }
 
   return (
-    <div className='p-3 overflow-y-auto scroll-smooth'>
+    <div className='p-3 overflow-y-auto scroll-smooth min-h-[80%]'>
       {/* Header */}
       <div className='flex items-center'>
         <div className='relative top-[-2px]'>
@@ -21,9 +62,10 @@ const DailyForm: FC = () => {
         <p className='text-14 font-bold leading-5 ml-2'>Header:</p>
       </div>
       <InputText
-        value={headerContent}
+        value={heading}
         placeholder='Enter header of daily report...'
-        onInput={setheaderContent}
+        onInput={(value) => setHeading(value)}
+        onBlur={handleBlurHeading}
       />
       {dataForm &&
         Object.keys(dataForm.groupTask).map((group) => {

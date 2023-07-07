@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '@redux/store'
 import { useAuth } from '@hooks/useAuth'
 import { selectUser, setUser } from '@redux/slices/auth/authSlice'
 import LoginPage from '@pages/login'
+import Loading from '@components/Loading'
 
 interface UserMiddlewareProps {
   children: ReactNode
@@ -40,7 +41,7 @@ const UserMiddleware: FC<UserMiddlewareProps> = ({ children, token }) => {
   }, [token])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   if (!token || !currentUser) {

@@ -7,6 +7,7 @@ interface InputTextProps {
   type?: string
   onInput?: (value: string, name: string) => any
   onFocus?: (e: React.FormEvent<HTMLInputElement>) => any
+  onBlur?: (e: React.FormEvent<HTMLInputElement>) => any
 }
 
 const InputText: FC<InputTextProps> = ({
@@ -15,7 +16,8 @@ const InputText: FC<InputTextProps> = ({
   name,
   type = 'text',
   onInput,
-  onFocus
+  onFocus,
+  onBlur
 }) => {
   return (
     <div className='relative'>
@@ -33,6 +35,11 @@ const InputText: FC<InputTextProps> = ({
         onFocus={(e: React.FormEvent<HTMLInputElement>) => {
           if (onFocus) {
             onFocus(e)
+          }
+        }}
+        onBlur={(e: React.FormEvent<HTMLInputElement>) => {
+          if (onBlur) {
+            onBlur(e)
           }
         }}
       />

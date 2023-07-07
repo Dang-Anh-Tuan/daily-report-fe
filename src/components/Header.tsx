@@ -11,9 +11,9 @@ const Header: FC = () => {
   return (
     <div className='border-b border-#EEEEEE h-[15%] w-full'>
       <div className='flex justify-between items-center px-3 h-full'>
-        <div>
+        <div className='w-8/12 truncate'>
           <span className='text-14 font-normal'>Hello, </span>
-          <span className='text-14'>{currentUser?.email}</span>
+          <span className='text-14 text-#FF9F1C'>{currentUser?.email}</span>
         </div>
         <div className='flex items-center'>
           <button className='flex justify-center items-center w-8 h-8 rounded-full hover:bg-#FEBF63.5'>

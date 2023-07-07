@@ -2,7 +2,6 @@ import Middleware from '@middleware/index'
 import HomePage from '@pages/home'
 import { selectToken, setToken } from '@redux/slices/auth/authSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
-import { Suspense } from 'react'
 import './App.css'
 
 function App() {
@@ -18,22 +17,20 @@ function App() {
 
   return (
     <div className='app border-none'>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Middleware
-          listMiddleware={[
-            {
-              name: 'AuthenMiddleware',
-              props: { needAuth: true, token: token }
-            },
-            {
-              name: 'UserMiddleware',
-              props: { needAuth: true, token: token }
-            }
-          ]}
-        >
-          <HomePage />
-        </Middleware>
-      </Suspense>
+      <Middleware
+        listMiddleware={[
+          {
+            name: 'AuthenMiddleware',
+            props: { needAuth: true, token: token }
+          },
+          {
+            name: 'UserMiddleware',
+            props: { needAuth: true, token: token }
+          }
+        ]}
+      >
+        <HomePage />
+      </Middleware>
     </div>
   )
 }

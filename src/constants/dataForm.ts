@@ -4,3 +4,10 @@ export const GROUP_TASK_NAME_HEADER: { [key: string]: string } = {
   nextDayPlans: 'Next-day plan:',
   issue: 'Issue:'
 }
+
+export const TASK_TYPE = {
+  TODAY_PLAN: 1,
+  ACTUAL: 2,
+  NEXT_DAY_PLAN: 3,
+  ISSUE: 4
+}
