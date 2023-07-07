@@ -6,6 +6,7 @@ interface ButtonProps {
   children: ReactNode
   color?: string
   type?: 'outline' | 'text' | 'flat'
+  onClick?: any
 }
 
 const Button: FC<ButtonProps> = ({
@@ -13,6 +14,7 @@ const Button: FC<ButtonProps> = ({
   size = 'small',
   color = '#FEBF63',
   type = 'text',
+  onClick,
   children
 }) => {
   const classSize = useMemo(() => {
@@ -46,7 +48,16 @@ const Button: FC<ButtonProps> = ({
   }, [])
   return (
     <>
-      <button className={classFinal}>{children}</button>
+      <button
+        className={classFinal}
+        onClick={() => {
+          if (onClick) {
+            onClick()
+          }
+        }}
+      >
+        {children}
+      </button>
     </>
   )
 }

@@ -1,6 +1,7 @@
 import { CaseReducer, PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { DailyFormData } from '@type/form-daily'
+import { DailyFormData, TaskDailyForm } from '@type/form-daily'
 import { RootState } from '@redux/store'
+import { TASK_TYPE, TaskType } from '@constants/dataForm'
 
 interface DailyTaskState {
   dataForm: DailyFormData
@@ -29,11 +30,57 @@ const setDailyReportAction: CaseReducer<
   state.dataForm = action.payload
 }
 
-const setHeadingAction: CaseReducer<
-  DailyTaskState,
-  PayloadAction<string>
-> = (state, action) => {
+const setHeadingAction: CaseReducer<DailyTaskState, PayloadAction<string>> = (
+  state,
+  action
+) => {
   state.dataForm.heading = action.payload
+}
+
+const addTaskAction: CaseReducer<
+  DailyTaskState,
+  PayloadAction<{ type: TaskType; task: TaskDailyForm }>
+> = (state, action) => {
+  const { type, task } = action.payload
+  switch (type) {
+    case TASK_TYPE.TODAY_PLAN:
+      state.dataForm.groupTask.todayPlans.push(task)
+      break
+    case TASK_TYPE.ACTUAL:
+      state.dataForm.groupTask.actual.push(task)
+      break
+    case TASK_TYPE.NEXT_DAY_PLAN:
+      state.dataForm.groupTask.nextDayPlans.push(task)
+      break
+    case TASK_TYPE.ISSUE:
+      state.dataForm.groupTask.issue.push(task)
+      break
+    default:
+      break
+  }
+}
+
+const editTaskAction: CaseReducer<
+  DailyTaskState,
+  PayloadAction<{ type: TaskType; index: number; task: TaskDailyForm }>
+> = (state, action) => {
+  const { type, task, index } = action.payload
+  switch (type) {
+    case TASK_TYPE.TODAY_PLAN:
+      state.dataForm.groupTask.todayPlans[index] = task
+      break
+    case TASK_TYPE.ACTUAL:
+      state.dataForm.groupTask.actual[index] = task
+      break
+    case TASK_TYPE.NEXT_DAY_PLAN:
+      state.dataForm.groupTask.nextDayPlans[index] = task
+      break
+    case TASK_TYPE.ISSUE:
+      state.dataForm.groupTask.issue[index] = task
+      break
+    default:
+      break
+  }
 }
 
 const dailyTaskSlice = createSlice({
@@ -41,13 +88,15 @@ const dailyTaskSlice = createSlice({
   initialState,
   reducers: {
     setDailyReport: setDailyReportAction,
-    setHeadingStore: setHeadingAction
+    setHeadingStore: setHeadingAction,
+    addTask: addTaskAction,
+    editTask: editTaskAction
   }
 })
 
 const { actions, reducer } = dailyTaskSlice
 
-export const { setDailyReport, setHeadingStore} = actions
+export const { setDailyReport, setHeadingStore, addTask, editTask } = actions
 
 export default reducer
 

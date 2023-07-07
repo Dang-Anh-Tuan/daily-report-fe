@@ -1,5 +1,5 @@
 import GroupTask from '@components/GroupTask'
-import { GROUP_TASK_NAME_HEADER } from '@constants/dataForm'
+import { GROUP_TASK_NAME_HEADER, GROUP_TASK_TYPE } from '@constants/dataForm'
 import BxIconPointing from '@icons/BxIconPointing'
 import {
   useGetNearestReportQuery,
@@ -16,6 +16,7 @@ import { FC, useEffect, useState } from 'react'
 import { setLoading } from '@redux/slices/system/systemSlice'
 import InputText from './InputText'
 import { selectUser } from '@redux/slices/auth/authSlice'
+import { notEmpty } from '@utils/validation'
 
 const DailyForm: FC = () => {
   const currentUser = useAppSelector(selectUser)
@@ -23,6 +24,7 @@ const DailyForm: FC = () => {
   const dispatch = useAppDispatch()
   const [heading, setHeading] = useState<string>('')
   const [updateReportApi] = useUpdateReportMutation()
+  const rulesValidate = [notEmpty]
 
   const { data: currentReport, isLoading } = currentUser?.id
     ? useGetNearestReportQuery(currentUser.id)
@@ -39,16 +41,18 @@ const DailyForm: FC = () => {
 
   function handleBlurHeading(e: React.FormEvent<HTMLInputElement>) {
     const newValue = e.currentTarget.value
-    dispatch(setHeadingStore(newValue as string))
-    if (dataForm.id) {
-      updateReportApi({
-        id: dataForm.id,
-        data: {
+    if (newValue) {
+      dispatch(setHeadingStore(newValue as string))
+      if (dataForm.id) {
+        updateReportApi({
+          id: dataForm.id,
           data: {
-            heading: newValue
+            data: {
+              heading: newValue
+            }
           }
-        }
-      })
+        })
+      }
     }
   }
 
@@ -63,6 +67,7 @@ const DailyForm: FC = () => {
       </div>
       <InputText
         value={heading}
+        rules={rulesValidate}
         placeholder='Enter header of daily report...'
         onInput={(value) => setHeading(value)}
         onBlur={handleBlurHeading}
@@ -74,7 +79,7 @@ const DailyForm: FC = () => {
               key={group}
               title={GROUP_TASK_NAME_HEADER[group]}
               tasks={dataForm.groupTask[group as keyof GroupTasks]}
-              keyGroup={group}
+              type={GROUP_TASK_TYPE[group]}
             />
           )
         })}

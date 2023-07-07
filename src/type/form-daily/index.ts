@@ -1,10 +1,13 @@
+import { TaskType } from "@constants/dataForm"
+
 export interface TaskDailyForm {
-  id: number
+  id: number | null
   createdAt?: string
   updatedAt?: string
   deletedAt?: any
   content: string
   percent?: number
+  type: TaskType
 }
 
 export interface GroupTasks {

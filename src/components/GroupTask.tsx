@@ -5,14 +5,33 @@ import { TaskDailyForm } from '@type/form-daily'
 import { FC } from 'react'
 import BxIconJira from '@icons/BxIconJira'
 import BxIconPointing from '@icons/BxIconPointing'
+import { TaskType } from '@constants/dataForm'
+import { useAppDispatch } from '@redux/store'
+import { addTask } from '@redux/slices/daily-task/dailyTaskSlice'
 
 interface GroupTaskProps {
   title: string
   tasks: TaskDailyForm[]
-  keyGroup: string
+  type: TaskType
 }
 
-const GroupTask: FC<GroupTaskProps> = ({ tasks, keyGroup, title }) => {
+const GroupTask: FC<GroupTaskProps> = ({ tasks, title, type }) => {
+  const dispatch = useAppDispatch()
+
+  function handleAddTask(type: TaskType) {
+    const newTask: TaskDailyForm = {
+      id: null,
+      content: '',
+      type: type
+    }
+    dispatch(
+      addTask({
+        type,
+        task: newTask
+      })
+    )
+  }
+
   return (
     <>
       <div className='flex items-center'>
@@ -23,15 +42,15 @@ const GroupTask: FC<GroupTaskProps> = ({ tasks, keyGroup, title }) => {
       </div>
       {tasks &&
         tasks.map((task, index) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            index={index}
-            keyGroup={keyGroup}
-          />
+          <TaskItem key={`${task.id} - ${index}`} task={task} index={index} />
         ))}
       <div className='flex mt-4'>
-        <Button classCustom='flex justify-center items-center text-#474B50 border-#ADE498 bg-#ADE498.5'>
+        <Button
+          classCustom='flex justify-center items-center text-#474B50 border-#ADE498 bg-#ADE498.5'
+          onClick={() => {
+            handleAddTask(type)
+          }}
+        >
           <BxIconAdd height={16} width={16} color='#474B50' />
           <span className='ml-1 text-#474B50 font-normal'>New Task</span>
         </Button>

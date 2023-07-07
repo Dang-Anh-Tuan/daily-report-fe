@@ -7,6 +7,8 @@ interface InputTextProps {
   name?: string
   type?: string
   rules?: RuleValidate[]
+  styleCustom?: object
+  max?: number
   onInput?: (value: string, name: string) => any
   onFocus?: (e: React.FormEvent<HTMLInputElement>) => any
   onBlur?: (e: React.FormEvent<HTMLInputElement>) => any
@@ -18,13 +20,15 @@ const InputText: FC<InputTextProps> = ({
   name,
   type = 'text',
   rules = [],
+  styleCustom,
+  max,
   onInput,
   onFocus,
   onBlur
 }) => {
   const { valid, error } = useValidate(value, rules)
   return (
-    <>
+    <div className=''>
       <div className='relative'>
         <input
           type={type}
@@ -34,6 +38,7 @@ const InputText: FC<InputTextProps> = ({
           value={value}
           placeholder={placeholder}
           name={name}
+          style={styleCustom}
           onInput={(e: React.FormEvent<HTMLInputElement>) => {
             if (onInput) {
               onInput(e.currentTarget.value, e.currentTarget.name)
@@ -56,10 +61,10 @@ const InputText: FC<InputTextProps> = ({
           }`}
         ></div>
       </div>
-      <p className='ml-3 text-12 font-normal italic text-#FC1817 leading-16 mt-1'>
+      <p className=' ml-3 text-12 font-normal italic text-#FC1817 leading-16 mt-1'>
         {error && error[0]}
       </p>
-    </>
+    </div>
   )
 }
 
