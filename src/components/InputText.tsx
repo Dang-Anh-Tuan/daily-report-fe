@@ -1,5 +1,5 @@
-import { FC } from 'react'
 import { RuleValidate, useValidate } from '@utils/validation'
+import { FC } from 'react'
 
 interface InputTextProps {
   value: string | number
@@ -39,6 +39,7 @@ const InputText: FC<InputTextProps> = ({
           placeholder={placeholder}
           name={name}
           style={styleCustom}
+          max={max}
           onInput={(e: React.FormEvent<HTMLInputElement>) => {
             if (onInput) {
               onInput(e.currentTarget.value, e.currentTarget.name)

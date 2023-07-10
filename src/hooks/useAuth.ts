@@ -68,7 +68,7 @@ export const useAuth = function () {
       // *****************************************
       const loginResp = await loginApi({
         token:
-          'ya29.a0AbVbY6OhKznKUTtf6OHOc1_4CEuHoyxDUilw4IZXb_xCtVzWPsydrSVna0q5iDVymItpfe7TYfgvzsZgjXqL_8HyXCGCiKLQGa6QbgKS1fihZRex8UdKyVgTG2yP5URjJtXssp2cdw88oV3kDxTj_mjmbwKUKwaCgYKAQASARESFQFWKvPlVc1FdnnFsiy5nV0OVCjl1Q0165'
+          'ya29.a0AbVbY6O6dpfdgvBCCvhy-63uOfoZRO9T1JIqApu4yKsH2kOexandaqy-of0MU87tpaIVciyBqZjZLhs0Z-9iUAWIOjDaj1dyRUc8SDIjXLgk09S-ThA3J3A6sUSLEqegdz9dfPXzDMpmjzjG8QgPYZ53nZd0aCgYKATkSARESFQFWKvPl9NUuhnT5cJB0IwQVQhFpgQ0163'
       })
 
       if ('data' in loginResp && loginResp.data) {

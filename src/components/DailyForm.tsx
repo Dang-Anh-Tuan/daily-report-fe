@@ -1,36 +1,41 @@
 import GroupTask from '@components/GroupTask'
 import { GROUP_TASK_NAME_HEADER, GROUP_TASK_TYPE } from '@constants/dataForm'
 import BxIconPointing from '@icons/BxIconPointing'
+import { selectUser } from '@redux/slices/auth/authSlice'
 import {
   useGetNearestReportQuery,
   useUpdateReportMutation
 } from '@redux/slices/daily-task/dailyTaskApiSlice'
 import {
   selectDailyTaskDataForm,
-  setDailyReport,
-  setHeadingStore
+  setDailyReport
 } from '@redux/slices/daily-task/dailyTaskSlice'
+import { setLoading } from '@redux/slices/system/systemSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 import { DailyFormData, GroupTasks } from '@type/form-daily'
-import { FC, useEffect, useState } from 'react'
-import { setLoading } from '@redux/slices/system/systemSlice'
-import InputText from './InputText'
-import { selectUser } from '@redux/slices/auth/authSlice'
 import { notEmpty } from '@utils/validation'
+import { FC, useEffect, useState } from 'react'
+import InputText from './InputText'
 
 const DailyForm: FC = () => {
   const currentUser = useAppSelector(selectUser)
   const dataForm = useAppSelector(selectDailyTaskDataForm)
   const dispatch = useAppDispatch()
   const [heading, setHeading] = useState<string>('')
-  const [updateReportApi] = useUpdateReportMutation()
+  const [updateReportApi, { isLoading: isUpdating }] = useUpdateReportMutation()
   const rulesValidate = [notEmpty]
 
-  const { data: currentReport, isLoading } = currentUser?.id
+  const {
+    data: currentReport,
+    isLoading,
+    refetch
+  } = currentUser?.id
     ? useGetNearestReportQuery(currentUser.id)
-    : { data: null, isLoading: false }
+    : { data: null, isLoading: false, refetch: null }
 
   useEffect(() => {
+    console.log('calll re set report')
+
     dispatch(setLoading(isLoading))
     dispatch(setDailyReport(currentReport as DailyFormData))
   }, [currentReport, isLoading])
@@ -39,12 +44,12 @@ const DailyForm: FC = () => {
     setHeading(dataForm?.heading || '')
   }, [dataForm])
 
-  function handleBlurHeading(e: React.FormEvent<HTMLInputElement>) {
+  async function handleBlurHeading(e: React.FormEvent<HTMLInputElement>) {
     const newValue = e.currentTarget.value
     if (newValue) {
-      dispatch(setHeadingStore(newValue as string))
+      // dispatch(setHeadingStore(newValue as string))
       if (dataForm.id) {
-        updateReportApi({
+        await updateReportApi({
           id: dataForm.id,
           data: {
             data: {
@@ -52,6 +57,12 @@ const DailyForm: FC = () => {
             }
           }
         })
+          .unwrap()
+          .then(() => {
+            if (refetch) {
+              refetch()
+            }
+          })
       }
     }
   }
