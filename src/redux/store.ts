@@ -7,6 +7,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { authApi } from './slices/auth/authApiSlice'
 import { userApi } from './slices/auth/userApiSlice'
 import { dailyReportApi } from './slices/daily-task/dailyTaskApiSlice'
+import { taskApi } from './slices/daily-task/taskApiSlice'
 
 const reducer = {
   auth: authReducer,
@@ -14,7 +15,8 @@ const reducer = {
   system: systemTaskReducer,
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
-  [dailyReportApi.reducerPath]: dailyReportApi.reducer
+  [dailyReportApi.reducerPath]: dailyReportApi.reducer,
+  [taskApi.reducerPath]: taskApi.reducer
 }
 
 const store = configureStore({
@@ -26,6 +28,7 @@ const store = configureStore({
       .concat(authApi.middleware)
       .concat(userApi.middleware)
       .concat(dailyReportApi.middleware)
+      .concat(taskApi.middleware)
 })
 
 setupListeners(store.dispatch)

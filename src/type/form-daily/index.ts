@@ -1,4 +1,4 @@
-import { TaskType } from "@constants/dataForm"
+import { TaskType } from '@constants/dataForm'
 
 export interface TaskDailyForm {
   id: number | null
@@ -33,6 +33,17 @@ export interface RequestUpdateReport {
       heading: string
     }
   }
+}
+
+export interface TaskUpdate extends TaskDailyForm {
+  idReport: number | null
+}
+
+export interface TaskCreate {
+  content: string
+  percent?: number
+  type: TaskType
+  idReport: number | null
 }
 
 export type keyGroupTask = 'todayPlans' | 'actual' | 'nextDayPlans' | 'issue'

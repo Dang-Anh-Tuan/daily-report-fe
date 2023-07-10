@@ -22,7 +22,7 @@ const DailyForm: FC = () => {
   const dataForm = useAppSelector(selectDailyTaskDataForm)
   const dispatch = useAppDispatch()
   const [heading, setHeading] = useState<string>('')
-  const [updateReportApi, { isLoading: isUpdating }] = useUpdateReportMutation()
+  const [updateReportApi] = useUpdateReportMutation()
   const rulesValidate = [notEmpty]
 
   const {
@@ -34,8 +34,6 @@ const DailyForm: FC = () => {
     : { data: null, isLoading: false, refetch: null }
 
   useEffect(() => {
-    console.log('calll re set report')
-
     dispatch(setLoading(isLoading))
     dispatch(setDailyReport(currentReport as DailyFormData))
   }, [currentReport, isLoading])

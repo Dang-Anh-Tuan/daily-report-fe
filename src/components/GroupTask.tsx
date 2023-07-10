@@ -1,13 +1,12 @@
 import Button from '@components/Button'
 import TaskItem from '@components/TaskItem'
+import { TaskType } from '@constants/dataForm'
+import { useGroupTask } from '@hooks/useGroupTask'
 import BxIconAdd from '@icons/BxIconAdd'
-import { TaskDailyForm } from '@type/form-daily'
-import { FC } from 'react'
 import BxIconJira from '@icons/BxIconJira'
 import BxIconPointing from '@icons/BxIconPointing'
-import { TaskType } from '@constants/dataForm'
-import { useAppDispatch } from '@redux/store'
-import { addTask } from '@redux/slices/daily-task/dailyTaskSlice'
+import { TaskDailyForm } from '@type/form-daily'
+import { FC } from 'react'
 
 interface GroupTaskProps {
   title: string
@@ -16,21 +15,7 @@ interface GroupTaskProps {
 }
 
 const GroupTask: FC<GroupTaskProps> = ({ tasks, title, type }) => {
-  const dispatch = useAppDispatch()
-
-  function handleAddTask(type: TaskType) {
-    const newTask: TaskDailyForm = {
-      id: null,
-      content: '',
-      type: type
-    }
-    dispatch(
-      addTask({
-        type,
-        task: newTask
-      })
-    )
-  }
+  const { handleAddTask } = useGroupTask()
 
   return (
     <>
