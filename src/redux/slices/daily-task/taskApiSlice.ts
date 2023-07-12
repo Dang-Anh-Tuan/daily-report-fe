@@ -19,8 +19,18 @@ export const taskApi = createApi({
         method: 'PUT',
         body: payload
       })
+    }),
+    deleteTask: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/task/${id}`,
+        method: 'DELETE'
+      })
     })
   })
 })
 
-export const { useUpdateTaskMutation, useCreateTaskMutation } = taskApi
+export const {
+  useUpdateTaskMutation,
+  useCreateTaskMutation,
+  useDeleteTaskMutation
+} = taskApi

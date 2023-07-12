@@ -21,6 +21,7 @@
     "scripting",
     "identity",
     "alarms",
-    "notifications"
+    "notifications",
+    "tabs"
   ]
 }

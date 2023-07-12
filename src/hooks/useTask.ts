@@ -1,68 +1,112 @@
-import { useAppDispatch, useAppSelector } from '@redux/store'
+import { selectUser } from '@redux/slices/auth/authSlice'
+import { useGetNearestReportQuery } from '@redux/slices/daily-task/dailyTaskApiSlice'
 import {
-  editTask,
+  deleteTask,
   selectDailyTaskDataForm
 } from '@redux/slices/daily-task/dailyTaskSlice'
-import { TaskCreate, TaskDailyForm, TaskUpdate } from '~/type/form-daily'
 import {
   useCreateTaskMutation,
+  useDeleteTaskMutation,
   useUpdateTaskMutation
 } from '@redux/slices/daily-task/taskApiSlice'
-import { useGetNearestReportQuery } from '@redux/slices/daily-task/dailyTaskApiSlice'
-import { selectUser } from '@redux/slices/auth/authSlice'
+import { useAppDispatch, useAppSelector } from '@redux/store'
+import { TaskType } from '@constants/dataForm'
+import { TaskCreate, TaskDailyForm, TaskUpdate } from '@type/form-daily'
 
-export const useTask = function (task: TaskDailyForm, index: number) {
+export const useTask = function (task?: TaskDailyForm) {
   const currentUser = useAppSelector(selectUser)
-  const dispatch = useAppDispatch()
   const [updateTaskApi] = useUpdateTaskMutation()
   const [createTaskApi] = useCreateTaskMutation()
+  const [deleteTaskApi] = useDeleteTaskMutation()
   const getNearestReportApi = currentUser?.id
     ? useGetNearestReportQuery(currentUser.id)
     : { data: null, isLoading: false, refetch: null }
 
   const currentReport = useAppSelector(selectDailyTaskDataForm)
+  const dispatch = useAppDispatch()
 
-  async function handleBlurInputTask(e: React.FormEvent<HTMLInputElement>) {
-    const newValue = e.currentTarget.value
-    if (newValue) {
+  async function handleBlurTaskInput(
+    value: string | number,
+    field: 'content' | 'percent' = 'content'
+  ) {
+    if (value && task) {
       const newTask = {
         ...task,
-        content: newValue,
         idReport: currentReport.id
       }
-      // dispatch(editTask({ type: task.type, index: index, task: newTask }))
-      if (newTask.id && newTask.idReport) {
-        await updateTask(newTask)
-      } else {
-        await createTask({
-          content: newTask.content,
-          percent: newTask.percent,
-          type: newTask.type,
-          idReport: newTask.idReport
-        })
+
+      if (field === 'content' && typeof value === 'string') {
+        newTask.content = value
+        await handleUpdateTask(newTask)
+      } else if (field === 'percent' && typeof value === 'number') {
+        newTask.percent = value
+        await handleUpdateTask(newTask)
       }
+    }
+  }
+
+  async function handleUpdateTask(task: TaskUpdate) {
+    if (task.id && task.idReport) {
+      await updateTask(task)
+    } else {
+      await createTask({
+        content: task.content,
+        percent: task.percent,
+        type: task.type,
+        idReport: task.idReport
+      })
+    }
+  }
+
+  async function refetchGetNearestReport() {
+    if (getNearestReportApi.refetch) {
+      await getNearestReportApi.refetch()
     }
   }
 
   async function createTask(task: TaskCreate) {
     await createTaskApi(task)
       .unwrap()
-      .then(() => {
-        if (getNearestReportApi.refetch) {
-          getNearestReportApi.refetch()
-        }
+      .then(async () => {
+        await refetchGetNearestReport()
       })
   }
 
   async function updateTask(task: TaskUpdate) {
     await updateTaskApi(task)
       .unwrap()
-      .then(() => {
-        if (getNearestReportApi.refetch) {
-          getNearestReportApi.refetch()
-        }
+      .then(async () => {
+        await refetchGetNearestReport()
       })
   }
 
-  return { handleBlurInputTask }
+  async function handleDeleteTask(task: TaskDailyForm, index: number) {
+    if (!task.id) {
+      dispatch(deleteTask({ task, index }))
+    } else {
+      await deleteTaskApi(task.id)
+        .unwrap()
+        .then(async () => {
+          await refetchGetNearestReport()
+        })
+    }
+  }
+
+  async function handleAddTaskJira(type: TaskType) {
+    if (chrome) {
+      chrome.tabs.query({ active: true, currentWindow: true }).then(async (tabs) => {
+        const currentTab = tabs[0]
+        const currentTabUrl = currentTab.url
+        if (currentTabUrl && currentReport.id) {
+          await createTask({
+            content: currentTabUrl,
+            percent: 0,
+            type: type,
+            idReport: currentReport.id
+          })
+        }
+      })
+    }
+  }
+  return { handleBlurTaskInput, handleDeleteTask, handleAddTaskJira }
 }

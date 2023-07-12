@@ -83,6 +83,29 @@ const editTaskAction: CaseReducer<
   }
 }
 
+const deleteTaskAction: CaseReducer<
+  DailyTaskState,
+  PayloadAction<{ task: TaskDailyForm; index: number }>
+> = (state, action) => {
+  const { task, index } = action.payload
+  switch (task.type) {
+    case TASK_TYPE.TODAY_PLAN:
+      state.dataForm.groupTask.todayPlans.splice(index, 1)
+      break
+    case TASK_TYPE.ACTUAL:
+      state.dataForm.groupTask.actual.splice(index, 1)
+      break
+    case TASK_TYPE.NEXT_DAY_PLAN:
+      state.dataForm.groupTask.nextDayPlans.splice(index, 1)
+      break
+    case TASK_TYPE.ISSUE:
+      state.dataForm.groupTask.issue.splice(index, 1)
+      break
+    default:
+      break
+  }
+}
+
 const dailyTaskSlice = createSlice({
   name: 'dailyTaskSlice',
   initialState,
@@ -90,13 +113,14 @@ const dailyTaskSlice = createSlice({
     setDailyReport: setDailyReportAction,
     setHeadingStore: setHeadingAction,
     addTask: addTaskAction,
-    editTask: editTaskAction
+    editTask: editTaskAction,
+    deleteTask: deleteTaskAction
   }
 })
 
 const { actions, reducer } = dailyTaskSlice
 
-export const { setDailyReport, setHeadingStore, addTask, editTask } = actions
+export const { setDailyReport, setHeadingStore, addTask, editTask, deleteTask } = actions
 
 export default reducer
 

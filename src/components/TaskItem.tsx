@@ -2,8 +2,8 @@ import InputText from '@components/InputText'
 import { TASK_TYPE } from '@constants/dataForm'
 import { useTask } from '@hooks/useTask'
 import BxIconTimes from '@icons/BxIconTimes'
-import { useAppDispatch } from '@redux/store'
 import { TaskDailyForm } from '@type/form-daily'
+import { trimZeroStartAtNumber } from '@utils/share-function'
 import { notEmpty } from '@utils/validation'
 import { FC, useState } from 'react'
 
@@ -15,22 +15,20 @@ interface TaskItemProps {
 const TaskItem: FC<TaskItemProps> = ({ task, index }) => {
   const [taskData, setTaskData] = useState<TaskDailyForm>(task)
   const rulesValidate = [notEmpty]
-  const { handleBlurInputTask } = useTask(task, index)
+  const { handleBlurTaskInput, handleDeleteTask } = useTask(task)
 
   function handleInputTask(value: string, name: string) {
-    setTaskData((pre) => ({ ...pre, [name]: value }))
-  }
+    const isNumber = name === 'percent'
 
-  // function handleBlurInputTask(e: React.FormEvent<HTMLInputElement>) {
-  //   const newValue = e.currentTarget.value
-  //   console.log(newValue)
-  //   const newTask = {
-  //     ...task,
-  //     content: newValue
-  //   }
-  //   console.log(newTask)
-  //   dispatch(editTask({ type: task.type, index: index, task: newTask }))
-  // }
+    if (name === 'percent' && +value > 100) {
+      setTaskData((pre) => ({ ...pre, percent: 100 }))
+    } else {
+      setTaskData((pre) => ({
+        ...pre,
+        [name]: isNumber ? trimZeroStartAtNumber(value) : value
+      }))
+    }
+  }
 
   return (
     <div className='flex items-start w-full gap-2 '>
@@ -42,7 +40,7 @@ const TaskItem: FC<TaskItemProps> = ({ task, index }) => {
           name='content'
           onInput={handleInputTask}
           onBlur={async (e) => {
-            await handleBlurInputTask(e)
+            await handleBlurTaskInput(e.currentTarget.value, 'content')
           }}
         />
       </div>
@@ -53,10 +51,12 @@ const TaskItem: FC<TaskItemProps> = ({ task, index }) => {
             placeholder=''
             name='percent'
             type='number'
-            styleCustom={{ padding: '4px 2px' }}
+            styleCustom={{ textAlign: 'center' }}
             max={100}
             onInput={handleInputTask}
-            onBlur={handleBlurInputTask}
+            onBlur={async (e) => {
+              await handleBlurTaskInput(+e.currentTarget.value, 'percent')
+            }}
           />
           <span className='relative text-14 top-1'>%</span>
         </div>
@@ -64,7 +64,7 @@ const TaskItem: FC<TaskItemProps> = ({ task, index }) => {
 
       <div className='flex justify-center items-center h-full w-1/12'>
         <div className='relative top-1'>
-          <button>
+          <button onClick={() => handleDeleteTask(task, index)}>
             <BxIconTimes />
           </button>
         </div>

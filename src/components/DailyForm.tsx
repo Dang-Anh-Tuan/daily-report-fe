@@ -1,16 +1,11 @@
 import GroupTask from '@components/GroupTask'
 import { GROUP_TASK_NAME_HEADER, GROUP_TASK_TYPE } from '@constants/dataForm'
+import { useGroupTask } from '@hooks/useGroupTask'
 import BxIconPointing from '@icons/BxIconPointing'
-import { selectUser } from '@redux/slices/auth/authSlice'
-import {
-  useGetNearestReportQuery,
-  useUpdateReportMutation
-} from '@redux/slices/daily-task/dailyTaskApiSlice'
 import {
   selectDailyTaskDataForm,
   setDailyReport
 } from '@redux/slices/daily-task/dailyTaskSlice'
-import { setLoading } from '@redux/slices/system/systemSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 import { DailyFormData, GroupTasks } from '@type/form-daily'
 import { notEmpty } from '@utils/validation'
@@ -18,25 +13,16 @@ import { FC, useEffect, useState } from 'react'
 import InputText from './InputText'
 
 const DailyForm: FC = () => {
-  const currentUser = useAppSelector(selectUser)
+  const { getReportApi, handleUpdateHeadingTask } = useGroupTask()
+  const { data: currentReport } = getReportApi
   const dataForm = useAppSelector(selectDailyTaskDataForm)
   const dispatch = useAppDispatch()
   const [heading, setHeading] = useState<string>('')
-  const [updateReportApi] = useUpdateReportMutation()
   const rulesValidate = [notEmpty]
 
-  const {
-    data: currentReport,
-    isLoading,
-    refetch
-  } = currentUser?.id
-    ? useGetNearestReportQuery(currentUser.id)
-    : { data: null, isLoading: false, refetch: null }
-
   useEffect(() => {
-    dispatch(setLoading(isLoading))
     dispatch(setDailyReport(currentReport as DailyFormData))
-  }, [currentReport, isLoading])
+  }, [currentReport])
 
   useEffect(() => {
     setHeading(dataForm?.heading || '')
@@ -44,25 +30,7 @@ const DailyForm: FC = () => {
 
   async function handleBlurHeading(e: React.FormEvent<HTMLInputElement>) {
     const newValue = e.currentTarget.value
-    if (newValue) {
-      // dispatch(setHeadingStore(newValue as string))
-      if (dataForm.id) {
-        await updateReportApi({
-          id: dataForm.id,
-          data: {
-            data: {
-              heading: newValue
-            }
-          }
-        })
-          .unwrap()
-          .then(() => {
-            if (refetch) {
-              refetch()
-            }
-          })
-      }
-    }
+    await handleUpdateHeadingTask(newValue)
   }
 
   return (

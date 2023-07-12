@@ -40,6 +40,7 @@ const InputText: FC<InputTextProps> = ({
           name={name}
           style={styleCustom}
           max={max}
+          autoComplete={'off'}
           onInput={(e: React.FormEvent<HTMLInputElement>) => {
             if (onInput) {
               onInput(e.currentTarget.value, e.currentTarget.name)

@@ -7,6 +7,7 @@ import BxIconJira from '@icons/BxIconJira'
 import BxIconPointing from '@icons/BxIconPointing'
 import { TaskDailyForm } from '@type/form-daily'
 import { FC } from 'react'
+import { useTask } from '@hooks/useTask'
 
 interface GroupTaskProps {
   title: string
@@ -16,6 +17,7 @@ interface GroupTaskProps {
 
 const GroupTask: FC<GroupTaskProps> = ({ tasks, title, type }) => {
   const { handleAddTask } = useGroupTask()
+  const { handleAddTaskJira } = useTask()
 
   return (
     <>
@@ -39,7 +41,10 @@ const GroupTask: FC<GroupTaskProps> = ({ tasks, title, type }) => {
           <BxIconAdd height={16} width={16} color='#474B50' />
           <span className='ml-1 text-#474B50 font-normal'>New Task</span>
         </Button>
-        <Button classCustom='ml-2 flex justify-center items-center text-#474B50 border-#7FDBDA bg-#7FDBDA.5'>
+        <Button
+          classCustom='ml-2 flex justify-center items-center text-#474B50 border-#7FDBDA bg-#7FDBDA.5'
+          onClick={() => handleAddTaskJira(type)}
+        >
           <div className='relative top-1'>
             <BxIconJira height={24} width={24} />
           </div>
