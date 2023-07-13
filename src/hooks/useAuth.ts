@@ -47,29 +47,29 @@ export const useAuth = function () {
       // ***Login in by extension and copy token and replace in body call API
       // ***Get token authen google by chrome
       // *****************************************
-      // const authToken = await new Promise<string>((resolve, reject) => {
-      //   chrome.identity.getAuthToken({ interactive: true }, (token) => {
-      //     if (token !== undefined) {
-      //       resolve(token)
-      //     } else {
-      //       reject(new Error('Unable to obtain auth token.'))
-      //     }
-      //   })
-      // })
+      const authToken = await new Promise<string>((resolve, reject) => {
+        chrome.identity.getAuthToken({ interactive: true }, (token) => {
+          if (token !== undefined) {
+            resolve(token)
+          } else {
+            reject(new Error('Unable to obtain auth token.'))
+          }
+        })
+      })
 
       // // ***** replace authToken by token authen by extension to test local
-      // const loginResp = await loginApi({
-      //   token: authToken
-      // })
+      const loginResp = await loginApi({
+        token: authToken
+      })
 
       // console.log(authToken)
 
       // ***Example : fake token
       // *****************************************
-      const loginResp = await loginApi({
-        token:
-          'ya29.a0AbVbY6ONir0U8hUmh2GnAy1zvQ6SSFHWDOF8FmFKOFt5UIfgIfWuCof2j9GCpNSf_I3NcaFNxtSc0iSyH8reG10V25kFtc0LTX84Q-3iuAZzCs6TDyo923G7NlhDBakCikucLH7NvrYUtb6VaGgvfaG01ESCCgaCgYKAZYSARESFQFWKvPljHX1476Pzq_B4IjabTfzzw0165'
-      })
+      // const loginResp = await loginApi({
+      //   token:
+      //     'ya29.a0AbVbY6PJHT8XGIs8Xra5blCxhf5PtwrDw3OwLd4c3CBTsIrXLMD7iok3zsPMfxhQBJzgupDzMMAJ9ZHFeRczN5uXrpv1FQu3AL66w98cRph7osFAhktvwAUGUS8eebRlUlZELCn5CRyTa4xG9wFcfk0qVJ7-cwaCgYKAYkSARESFQFWKvPl9ikqBvJ_Kuu04FQlFbR6Xg0165'
+      // })
 
       if ('data' in loginResp && loginResp.data) {
         const { accessToken, refreshToken } = loginResp.data.data
@@ -88,7 +88,7 @@ export const useAuth = function () {
         getUser()
       } else if ('error' in loginResp && loginResp.error) {
         logout()
-        console.log((loginResp.error as { data: IError }).data.message)
+        console.log((loginResp.error as { data: IError }).data?.message)
         // TODO : show message login fail
       } else {
         // TODO : show message login fail

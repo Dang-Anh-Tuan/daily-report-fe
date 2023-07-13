@@ -6,21 +6,21 @@ export const taskApi = createApi({
   reducerPath: 'tasktApi',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    createTask: builder.mutation<void, TaskCreate>({
+    createTask: builder.mutation<any, TaskCreate>({
       query: (payload) => ({
         url: `/task`,
         method: 'POST',
         body: payload
       })
     }),
-    updateTask: builder.mutation<void, TaskUpdate>({
+    updateTask: builder.mutation<any, TaskUpdate>({
       query: (payload) => ({
         url: `/task`,
         method: 'PUT',
         body: payload
       })
     }),
-    deleteTask: builder.mutation<void, number>({
+    deleteTask: builder.mutation<any, number>({
       query: (id) => ({
         url: `/task/${id}`,
         method: 'DELETE'

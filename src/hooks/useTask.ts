@@ -65,47 +65,46 @@ export const useTask = function (task?: TaskDailyForm) {
   }
 
   async function createTask(task: TaskCreate) {
-    await createTaskApi(task)
-      .unwrap()
-      .then(async () => {
-        await refetchGetNearestReport()
-      })
+    const res = await createTaskApi(task).unwrap()
+    if (res) {
+      await refetchGetNearestReport()
+    }
   }
 
   async function updateTask(task: TaskUpdate) {
-    await updateTaskApi(task)
-      .unwrap()
-      .then(async () => {
-        await refetchGetNearestReport()
-      })
+    const res = await updateTaskApi(task).unwrap()
+    if (res) {
+      await refetchGetNearestReport()
+    }
   }
 
   async function handleDeleteTask(task: TaskDailyForm, index: number) {
     if (!task.id) {
       dispatch(deleteTask({ task, index }))
     } else {
-      await deleteTaskApi(task.id)
-        .unwrap()
-        .then(async () => {
-          await refetchGetNearestReport()
-        })
+      const res = await deleteTaskApi(task.id).unwrap()
+      if (res) {
+        await refetchGetNearestReport()
+      }
     }
   }
 
   async function handleAddTaskJira(type: TaskType) {
     if (chrome) {
-      chrome.tabs.query({ active: true, currentWindow: true }).then(async (tabs) => {
-        const currentTab = tabs[0]
-        const currentTabUrl = currentTab.url
-        if (currentTabUrl && currentReport.id) {
-          await createTask({
-            content: currentTabUrl,
-            percent: 0,
-            type: type,
-            idReport: currentReport.id
-          })
-        }
-      })
+      chrome.tabs
+        .query({ active: true, currentWindow: true })
+        .then(async (tabs) => {
+          const currentTab = tabs[0]
+          const currentTabUrl = currentTab.url
+          if (currentTabUrl && currentReport.id) {
+            await createTask({
+              content: currentTabUrl,
+              percent: 0,
+              type: type,
+              idReport: currentReport.id
+            })
+          }
+        })
     }
   }
   return { handleBlurTaskInput, handleDeleteTask, handleAddTaskJira }
