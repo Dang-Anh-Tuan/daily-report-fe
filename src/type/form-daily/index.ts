@@ -8,6 +8,7 @@ export interface TaskDailyForm {
   content: string
   percent?: number
   type: TaskType
+  link: null | string
 }
 
 export interface GroupTasks {
@@ -44,6 +45,7 @@ export interface TaskCreate {
   percent?: number
   type: TaskType
   idReport: number | null
+  link: null | string
 }
 
 export type keyGroupTask = 'todayPlans' | 'actual' | 'nextDayPlans' | 'issue'

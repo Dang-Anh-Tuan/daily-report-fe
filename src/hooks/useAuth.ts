@@ -57,18 +57,18 @@ export const useAuth = function () {
         })
       })
 
-      // // ***** replace authToken by token authen by extension to test local
+      // ***** replace authToken by token authen by extension to test local
       const loginResp = await loginApi({
         token: authToken
       })
 
-      // console.log(authToken)
+      console.log(authToken)
 
       // ***Example : fake token
       // *****************************************
       // const loginResp = await loginApi({
       //   token:
-      //     'ya29.a0AbVbY6PJHT8XGIs8Xra5blCxhf5PtwrDw3OwLd4c3CBTsIrXLMD7iok3zsPMfxhQBJzgupDzMMAJ9ZHFeRczN5uXrpv1FQu3AL66w98cRph7osFAhktvwAUGUS8eebRlUlZELCn5CRyTa4xG9wFcfk0qVJ7-cwaCgYKAYkSARESFQFWKvPl9ikqBvJ_Kuu04FQlFbR6Xg0165'
+      //     'ya29.a0AbVbY6O5SIRQezXaX5x1jkHxaaCuri2NZexBgFQf_O0LQcT2l03YgKCgboiFv1sXX5KomvKKa8wlgkBA8o6ZYukYWM9zT2hyPr-KJ_r70z3LeGV8JU4bYIkXRxkMQlHceQgra9RWM9Mq6QaN7Xj68tzOHrRHiQaCgYKARMSARESFQFWKvPlX8ZbCfKx0p4_Lm6QHEEGAw0165'
       // })
 
       if ('data' in loginResp && loginResp.data) {

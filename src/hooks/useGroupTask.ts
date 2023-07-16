@@ -24,6 +24,7 @@ export const useGroupTask = function () {
       id: null,
       content: '',
       type: type,
+      link: null,
       percent: 0
     }
     dispatch(
@@ -33,7 +34,6 @@ export const useGroupTask = function () {
       })
     )
   }
-  
 
   async function handleUpdateHeadingTask(newValue: string) {
     if (newValue && getReportApi.data && getReportApi.data.id) {

@@ -2,6 +2,7 @@ import { selectUser } from '@redux/slices/auth/authSlice'
 import { useGetNearestReportQuery } from '@redux/slices/daily-task/dailyTaskApiSlice'
 import {
   deleteTask,
+  editTask,
   selectDailyTaskDataForm
 } from '@redux/slices/daily-task/dailyTaskSlice'
 import {
@@ -53,7 +54,8 @@ export const useTask = function (task?: TaskDailyForm) {
         content: task.content,
         percent: task.percent,
         type: task.type,
-        idReport: task.idReport
+        idReport: task.idReport,
+        link: task.link
       })
     }
   }
@@ -73,6 +75,8 @@ export const useTask = function (task?: TaskDailyForm) {
 
   async function updateTask(task: TaskUpdate) {
     const res = await updateTaskApi(task).unwrap()
+    console.log(res);
+    
     if (res) {
       await refetchGetNearestReport()
     }
@@ -89,7 +93,29 @@ export const useTask = function (task?: TaskDailyForm) {
     }
   }
 
-  async function handleAddTaskJira(type: TaskType) {
+  function handleUpdateLinkTaskStore(
+    type: TaskType,
+    task: TaskDailyForm,
+    index: number,
+    link: null | string
+  ) {
+    dispatch(
+      editTask({
+        type,
+        task: {
+          ...task,
+          link: link
+        },
+        index
+      })
+    )
+  }
+
+  async function handleAddTaskJira(
+    type: TaskType,
+    task: TaskDailyForm,
+    index: number
+  ) {
     if (chrome) {
       chrome.tabs
         .query({ active: true, currentWindow: true })
@@ -97,15 +123,42 @@ export const useTask = function (task?: TaskDailyForm) {
           const currentTab = tabs[0]
           const currentTabUrl = currentTab.url
           if (currentTabUrl && currentReport.id) {
-            await createTask({
-              content: currentTabUrl,
-              percent: 0,
-              type: type,
-              idReport: currentReport.id
-            })
+            if (task.id) {
+              await updateTask({
+                ...task,
+                link: currentTabUrl,
+                idReport: currentReport.id
+              })
+            } else {
+              handleUpdateLinkTaskStore(type, task, index, currentTabUrl)
+            }
           }
         })
     }
   }
-  return { handleBlurTaskInput, handleDeleteTask, handleAddTaskJira }
+
+  async function handleDeleteLinkJira(
+    type: TaskType,
+    task: TaskDailyForm,
+    index: number
+  ) {
+    if (currentReport.id) {
+      if (!task.id) {
+        handleUpdateLinkTaskStore(type, task, index, null)
+      } else {
+        await updateTask({
+          ...task,
+          link: null,
+          idReport: currentReport.id
+        })
+      }
+    }
+  }
+
+  return {
+    handleBlurTaskInput,
+    handleDeleteTask,
+    handleAddTaskJira,
+    handleDeleteLinkJira
+  }
 }

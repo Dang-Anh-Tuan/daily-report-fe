@@ -3,11 +3,9 @@ import TaskItem from '@components/TaskItem'
 import { TaskType } from '@constants/dataForm'
 import { useGroupTask } from '@hooks/useGroupTask'
 import BxIconAdd from '@icons/BxIconAdd'
-import BxIconJira from '@icons/BxIconJira'
 import BxIconPointing from '@icons/BxIconPointing'
 import { TaskDailyForm } from '@type/form-daily'
 import { FC } from 'react'
-import { useTask } from '@hooks/useTask'
 
 interface GroupTaskProps {
   title: string
@@ -17,7 +15,6 @@ interface GroupTaskProps {
 
 const GroupTask: FC<GroupTaskProps> = ({ tasks, title, type }) => {
   const { handleAddTask } = useGroupTask()
-  const { handleAddTaskJira } = useTask()
 
   return (
     <>
@@ -33,22 +30,13 @@ const GroupTask: FC<GroupTaskProps> = ({ tasks, title, type }) => {
         ))}
       <div className='flex mt-4'>
         <Button
-          classCustom='flex justify-center items-center text-#474B50 border-#ADE498 bg-#ADE498.5'
+          classCustom='flex justify-center items-center text-white bg-#00C851 p-4 hover:bg-#00C851.8'
           onClick={() => {
             handleAddTask(type)
           }}
         >
-          <BxIconAdd height={16} width={16} color='#474B50' />
-          <span className='ml-1 text-#474B50 font-normal'>New Task</span>
-        </Button>
-        <Button
-          classCustom='ml-2 flex justify-center items-center text-#474B50 border-#7FDBDA bg-#7FDBDA.5'
-          onClick={() => handleAddTaskJira(type)}
-        >
-          <div className='relative top-1'>
-            <BxIconJira height={24} width={24} />
-          </div>
-          <span className='text-#474B50 font-normal'>Collect link</span>
+          <BxIconAdd height={16} width={16} color='white' />
+          <span className='ml-1 text-white font-normal'>New Task</span>
         </Button>
       </div>
     </>

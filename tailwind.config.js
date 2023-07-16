@@ -3,20 +3,23 @@ export default {
   content: ['index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     fontFamily: {
-      'poppin' : ['Poppins', 'sans-serif']
+      poppin: ['Poppins', 'sans-serif']
     },
 
     extend: {
       colors: {
         // Primary
         '#FEBF63': '#FEBF63',
-        '#FEBF63.5' : 'rgba(254, 191, 99, 0.5)',
-        '#FF9F1C' : '#FF9F1C',
+        '#FEBF63.5': 'rgba(254, 191, 99, 0.5)',
+        '#FF9F1C': '#FF9F1C',
 
         // Red
         '#A21600': '#A21600',
         '#C51B00': '#C51B00', // Vivi red
-        '#F80404': '#F80404', // danger
+        '#FF4444': '#FF4444', // danger
+        '#FF4444.2': 'rgba(255,68,68, 0.2)', // danger
+        '#00C851': '#00C851', //success
+        '#00C851.8': 'rgba(0,200,81,0.8)', //success
         '#FC1817': '#FC1817',
         '#FF4B2E': '#FF4B2E',
         '#FF7862': '#FF7862',
@@ -31,7 +34,7 @@ export default {
         '#F3F3F3': '#F3F3F3',
         '#999999': '#999999',
         '#DFDFDF': '#DFDFDF',
-        'EEEEEEE': 'EEEEEEE',
+        EEEEEEE: 'EEEEEEE',
 
         '#FFFFFF': '#FFFFFF',
 
@@ -57,13 +60,13 @@ export default {
         '#ADE498': '#ADE498',
         '#ADE498.5': 'rgba(173, 228, 152, 0.5)',
         '#52B988': '#52B988',
-        
+
         //Blue
-        '#7FDBDA' : '#7FDBDA',
-        '#7FDBDA.5' : 'rgba(127, 219, 218, 0.5)',
+        '#7FDBDA': '#7FDBDA',
+        '#7FDBDA.5': 'rgba(127, 219, 218, 0.5)',
         '#3F8CFE': 'rgb(63,140,254)',
         '#3F8CFE.2': 'rgb(63,140,254, 0.2)',
-        
+        '#2684FF': '#2684FF',
 
         // toast
         '#E6EEFA': '#E6EEFA',

@@ -17,7 +17,7 @@ const renderTaskToText = function (
   return tasks
     .map(
       (task) =>
-        `- ${task.content}${isShowPercent ? ' ( ' + task.percent + ' % )' : ''} `
+        `- ${task.content}${isShowPercent ? ' ( ' + task.percent + ' % )' : ''} ${task.link? ` - ${task.link}` : ''}`
     )
     .join('\n')
 }
